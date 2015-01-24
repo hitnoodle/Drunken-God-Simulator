@@ -9,7 +9,7 @@ public class MiniGameController : MonoBehaviour
     public delegate void _OnGameDone(float result);
     public _OnGameDone OnGameDone;
 
-    public void StartGame()
+    public virtual void StartGame()
     {
         Started = true;
     }

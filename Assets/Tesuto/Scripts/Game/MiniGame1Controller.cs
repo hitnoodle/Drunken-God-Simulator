@@ -8,13 +8,18 @@ public class MiniGame1Controller : MiniGameController
 	{
 	
 	}
+
+    public override void StartGame()
+    {
+        base.StartGame();
+    }
 	
 	// Update is called once per frame
 	void Update() 
 	{
         if (!Started) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             if (OnGameDone != null)
                 OnGameDone(0f);

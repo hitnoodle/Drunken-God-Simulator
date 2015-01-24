@@ -64,7 +64,6 @@ public class GameTestScene : MonoBehaviour
 
         GameObject miniGameObject = Instantiate(Resources.Load<GameObject>("Mini Game/Mini Game - " + _EventIndex)) as GameObject;
         _CurrentMiniGame = miniGameObject.GetComponent("MiniGame" + _EventIndex + "Controller") as MiniGameController;
-        
     }
 
     void SpawnMiniGame()
