@@ -3,6 +3,7 @@
 --- !u!78 &1
 TagManager:
   tags:
+  - Manager
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
@@ -49,7 +50,7 @@ TagManager:
     userID: 2
     uniqueID: 1630471977
     locked: 0
-  - name: UI
-    userID: 3
-    uniqueID: 3409874297
+  - name: 
+    userID: 4
+    uniqueID: 4092463323
     locked: 0

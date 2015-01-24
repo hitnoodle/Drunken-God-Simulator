@@ -3,98 +3,126 @@ using System.Collections;
 
 public class ParryEnemy : MonoBehaviour 
 {
-    public const int STATE_RUN = 0;
-    public const int STATE_ATTACK_UP = 1;
-    public const int STATE_ATTACK_DOWN = 2;
+    public const int STATE_ATTACK_UP = 0;
+    public const int STATE_ATTACK_DOWN = 1;
 
     public float MinSpeed = 5;
     public float MaxSpeed = 10;
 
     public float AttackDelta = 2f;
-    public int HowManyAttack = 3;
+    public float DeathDelta = 1.5f;
 
     public float[] StateSpeed;
 
-    public delegate void _OnFinishedAttacking();
-    public _OnFinishedAttacking OnFinishedAttacking;
-
-    private float _StartX;
     private Player _Player;
     private Animator _Animator;
+
+    private IEnumerator AttackRoutine;
 
 	// Use this for initialization
 	void Start() 
 	{
-        _StartX = transform.position.x;
         _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         _Animator = GetComponent<Animator>();
-
-        StartCoroutine(Attaack());
 	}
+
+    void ChangeAnimationState(int STATE)
+    {
+        _Animator.SetInteger("State", STATE);
+        _Animator.speed = StateSpeed[STATE];
+    }
+
+    // 1 is up, 2 is down
+    public void Attack(int direction)
+    {
+        ChangeAnimationState(direction);
+
+        AttackRoutine = Attaack();
+        StartCoroutine(AttackRoutine);
+    }
 
     IEnumerator Attaack()
     {
         float speed = Random.Range(MinSpeed, MaxSpeed);
 
-        while (transform.position.x > _Player.transform.position.x + AttackDelta)
+        bool onDestination = false;
+        while (!onDestination && transform.position.x > _Player.transform.position.x + AttackDelta)
         {
             float newPos = transform.position.x - (Time.deltaTime * speed);
-            if (newPos < _Player.transform.position.x + AttackDelta) newPos = _Player.transform.position.x + AttackDelta;
+            if (newPos < _Player.transform.position.x + AttackDelta)
+            {
+                newPos = _Player.transform.position.x + AttackDelta;
+                onDestination = true;
+            } 
 
             transform.position = new Vector3(newPos, transform.position.y, transform.position.z);
             yield return null;
         }
 
-        transform.position = new Vector3(_Player.transform.position.x + AttackDelta, transform.position.y, transform.position.z);
-        int attack = Random.Range(0, 2) + 1;
-        ChangeAnimationState(attack);
-        if (attack == 0)
-        { 
+        while (true)
+        {
+            transform.position = new Vector3(transform.position.x - (Time.deltaTime * speed * 0.1f), transform.position.y, transform.position.z);
+            if (transform.position.x <= DeathDelta) StartCoroutine(OutFalse());
+
+            yield return null;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        string objectTag = coll.gameObject.tag;
+        if (objectTag == "Player")
+        {
+            StopCoroutine(AttackRoutine);
+
+            Player player = coll.gameObject.GetComponent<Player>();
+            int playerState = player.GetAnimationState();
+            int enemyState = _Animator.GetInteger("State");
+
+            if (playerState == Player.STATE_ATTACK_UP && enemyState == STATE_ATTACK_UP)
+            {
+                StartCoroutine(Out());
+            }
+            else if (playerState == Player.STATE_ATTACK_DOWN && enemyState == STATE_ATTACK_DOWN)
+            {
+                StartCoroutine(Out());
+            }
+            else
+            {
+                StartCoroutine(OutFalse());
+            }
+
+        }
+    }
+
+    IEnumerator Out()
+    {
+        float speedX = Random.Range(10, 15);
+        float speedY = Random.Range(-15, 15);
+
+        while (transform.position.x <= 13)
+        {
+            transform.position = new Vector3(transform.position.x + speedX * Time.deltaTime, transform.position.y + speedY * Time.deltaTime, transform.position.z);
+            transform.Rotate(0, 0, 30);
             
-        }
-        else if (attack == 1)
-        { 
-        
-        }
-    }
-
-    void Back()
-    {
-        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-        ChangeAnimationState(STATE_RUN);
-
-        StartCoroutine(Baack());
-    }
-
-    IEnumerator Baack()
-    {
-        float speed = Random.Range(MinSpeed, MaxSpeed);
-
-        while (transform.position.x < _StartX)
-        {
-            float newPos = transform.position.x + (Time.deltaTime * speed);
-            if (newPos > _StartX) newPos = _StartX;
-
-            transform.position = new Vector3(newPos, transform.position.y, transform.position.z);
             yield return null;
         }
 
-        HowManyAttack--;
-        if (HowManyAttack <= 0)
-        {
-            if (OnFinishedAttacking != null)
-                OnFinishedAttacking();
-        }
-        else
-        {
-            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            StartCoroutine(Attaack());
-        }
+        Destroy(gameObject);
     }
 
-    public void ChangeAnimationState(int STATE)
+    IEnumerator OutFalse()
     {
-        _Animator.SetInteger("State", STATE);
-        _Animator.speed = StateSpeed[STATE];
+        while (transform.position.x <= 13)
+        {
+            float speedX = Random.Range(10, 15);
+            float speedY = Random.Range(-15, 15);
+
+            transform.position = new Vector3(transform.position.x + speedX * Time.deltaTime, transform.position.y + speedY * Time.deltaTime, transform.position.z);
+
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 }

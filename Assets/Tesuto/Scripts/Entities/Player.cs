@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
-
+public class Player : MonoBehaviour 
+{
     public MouseScrollInput MouseScrollInput;
     public float[] StateSpeed;
 
@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
 	public const int STATE_PULLPUSH		= 8;
 	public const int STATE_RUN		    = 9;
 	public const int STATE_SAD		    = 10;
+    public const int STATE_PARRY_IDLE   = 11;
 	
 	// Use this for initialization
 	void Start () {
@@ -33,11 +34,18 @@ public class Player : MonoBehaviour {
         _anim.speed = Param * 3f;
 	}
 
-	public void ActivateAttackCollider(){
+    public void SetAnimationSpeed(float Param)
+    {
+        _anim.speed = Param;
+    }
+
+	public void ActivateAttackCollider()
+    {
 		_ColliderAttack.enabled		= true;
 	}
 
-	public void DeactivateAttackCollider(){
+	public void DeactivateAttackCollider()
+    {
 		_ColliderAttack.enabled		= false;
 	}
 
@@ -54,8 +62,18 @@ public class Player : MonoBehaviour {
         _anim.speed = StateSpeed[STATE];
 	}
 
+    public int GetAnimationState()
+    {
+        return _anim.GetInteger("State");
+    }
+
     public void Idle()
     {
         ChangeAnimationState(STATE_IDLE);
+    }
+
+    public void IdleParry()
+    {
+        ChangeAnimationState(STATE_PARRY_IDLE);
     }
 }

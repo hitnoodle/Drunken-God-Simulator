@@ -11,8 +11,9 @@ public class GameTestScene : MonoBehaviour
     public MouseScrollInput MouseScroll;
     public ParallaxBG[] Backgrounds;
 
+    public int EventIndex = 4;
+
     private float _InitialSpeed;
-    private int _EventIndex = 6;
     private bool _OnEvent = false;
 
     private Player _Player;
@@ -51,13 +52,20 @@ public class GameTestScene : MonoBehaviour
 
         CurrentDistance += Speed * Time.deltaTime;
 
-        if (_EventIndex < EventDistances.Length && CurrentDistance >= EventDistances[_EventIndex]) 
+        if (EventIndex < EventDistances.Length && CurrentDistance >= EventDistances[EventIndex]) 
         {
-            CurrentDistance = EventDistances[_EventIndex];
+            CurrentDistance = EventDistances[EventIndex];
             SetBackgroundSpeed(0);
 
-            _EventIndex++;
-            StartMiniGame(_EventIndex);
+            EventIndex++;
+            if (EventIndex == 3) EventIndex = 5;
+            else if (EventIndex == 6)
+            {
+                EventIndex = 1;
+                CurrentDistance = 0;
+            }
+
+            StartMiniGame(EventIndex);
 
             _OnEvent = true;
         }
@@ -70,8 +78,8 @@ public class GameTestScene : MonoBehaviour
 
         _Player.ChangeAnimationState(Player.STATE_IDLE);
 
-        GameObject miniGameObject = Instantiate(Resources.Load<GameObject>("Mini Game/Mini Game - " + _EventIndex)) as GameObject;
-        _CurrentMiniGame = miniGameObject.GetComponent("MiniGame" + _EventIndex + "Controller") as MiniGameController;
+        GameObject miniGameObject = Instantiate(Resources.Load<GameObject>("Mini Game/Mini Game - " + EventIndex)) as GameObject;
+        _CurrentMiniGame = miniGameObject.GetComponent("MiniGame" + EventIndex + "Controller") as MiniGameController;
     }
 
     void SpawnMiniGame()
@@ -90,6 +98,8 @@ public class GameTestScene : MonoBehaviour
 
     void StartMovingAgain()
     {
+        CameraZoom.onZoomFinished -= StartMovingAgain;
+
         Speed = _InitialSpeed;
         SetBackgroundSpeed(1f);
 

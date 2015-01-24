@@ -120,7 +120,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.1999998, y: -.819999993, z: 0}
+  m_LocalPosition: {x: 11.1999998, y: 1.04999995, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -132,7 +132,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.1999998, y: -.819999993, z: 0}
+  m_LocalPosition: {x: 11.1999998, y: 1.04999995, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -144,7 +144,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.1999998, y: -.819999993, z: 0}
+  m_LocalPosition: {x: 11.1999998, y: 1.04999995, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -156,7 +156,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.1999998, y: -.819999993, z: 0}
+  m_LocalPosition: {x: 11.1999998, y: 1.04999995, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -168,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.1999998, y: -.819999993, z: 0}
+  m_LocalPosition: {x: 11.1999998, y: 1.04999995, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
@@ -184,7 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b5c8b6f27e7d784d9a15ae5b7ff8b24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Index: 5
   Started: 0
   StartX: 2.5999999
   EndX: 11.1999998
@@ -192,42 +191,45 @@ MonoBehaviour:
   WaitDuration: 3
   TextName: {fileID: 0}
   TextText: {fileID: 0}
+  LineLength: 70
+  ReactionRight: Thank you for hearing us. It feels good to have someone that could
+    give us a shoulder.
+  ReactionWrong: Maybe we shouldn't have told you at all...
+  ReactionIgnore: You're no FUN
   Questions:
   - VillagerObject: {fileID: 100010}
-    Name: VILLAGER A
-    Text: asdasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Name: VILLAGER
+    Text: My cat died this week
     Answer: 1
-    ReactionRight: RIGHT!
-    ReactionWrong: YOU'RE WRONG
-    ReactionIgnore: NOTICE MEEE
   - VillagerObject: {fileID: 100008}
-    Name: VILLAGER B
-    Text: adsgdfhddf
-    Answer: -1
-    ReactionRight: RIGHT!
-    ReactionWrong: YOU'RE WRONG
-    ReactionIgnore: NOTICE MEEE
+    Name: VILLAGER
+    Text: I hated that my dad hated my brother for hating my stepmother. Now my stepmother
+      has gone from my house.
+    Answer: 1
   - VillagerObject: {fileID: 100006}
-    Name: VILLAGER C
-    Text: qweqeasdasd
-    Answer: 1
-    ReactionRight: RIGHT!
-    ReactionWrong: YOU'RE WRONG
-    ReactionIgnore: NOTICE MEEE
+    Name: VILLAGER
+    Text: I just gotten an hairband! I really hate to say that I love to wear anything
+      other than my armband!
+    Answer: -1
   - VillagerObject: {fileID: 100004}
-    Name: VILLAGER D
-    Text: czxcqwdasda
+    Name: VILLAGER
+    Text: I lost my good luck charm! Now I never didn't get any good luck!
     Answer: 1
-    ReactionRight: RIGHT!
-    ReactionWrong: YOU'RE WRONG
-    ReactionIgnore: NOTICE MEEE
   - VillagerObject: {fileID: 100002}
-    Name: VILLAGER E
-    Text: asdawasdwdad
+    Name: VILLAGER
+    Text: He broke up with me.
     Answer: 1
-    ReactionRight: RIGHT!
-    ReactionWrong: YOU'RE WRONG
-    ReactionIgnore: NOTICE MEEE
+  - VillagerObject: {fileID: 100002}
+    Name: VILLAGER
+    Text: Finally I'm able to break up with her after all this time!
+    Answer: -1
+  - VillagerObject: {fileID: 100002}
+    Name: VILLAGER
+    Text: I always said that I really never didn't wanted a non-four legged animal.
+      Now I got a dog.
+    Answer: 1
+  LaughClip: {fileID: 8300000, guid: 76625b682fc664a4c849827fe8c02bee, type: 3}
+  SadClip: {fileID: 8300000, guid: 3a15c90f7a03c6b4583b4bfc9c1e18cf, type: 3}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -246,8 +248,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1630471977
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: f5ecab70f58da344682967a31f837479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21200002
@@ -268,8 +270,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1630471977
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: f5ecab70f58da344682967a31f837479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21200004
@@ -290,8 +292,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1630471977
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: f5ecab70f58da344682967a31f837479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21200006
@@ -312,8 +314,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1630471977
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: f5ecab70f58da344682967a31f837479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21200008
@@ -334,8 +336,8 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 1630471977
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: f5ecab70f58da344682967a31f837479, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000

@@ -12,6 +12,12 @@ public class MiniGame5Controller : MiniGameController
     public TextMesh TextName;
     public TextMesh TextText;
 
+    public int LineLength = 50;
+
+    public string ReactionRight = "RIGHT!";
+    public string ReactionWrong = "YOU'RE WRONG";
+    public string ReactionIgnore = "NOTICE MEEE";
+
     [System.Serializable]
     public class Game5Question
     {
@@ -20,12 +26,11 @@ public class MiniGame5Controller : MiniGameController
         public string Name;
         public string Text;
         public int Answer;
-
-        public string ReactionRight = "RIGHT!";
-        public string ReactionWrong = "YOU'RE WRONG";
-        public string ReactionIgnore = "NOTICE MEEE";
     }
     public Game5Question[] Questions;
+
+    public AudioClip LaughClip;
+    public AudioClip SadClip;
 
     private Player player;
     private MouseScrollInput mouseScrollInput;
@@ -66,7 +71,7 @@ public class MiniGame5Controller : MiniGameController
         villagerTransform.position = new Vector3(StartX, villagerTransform.position.y, villagerTransform.position.z);
 
         TextName.text = currentQuestion.Name;
-        TextText.text = currentQuestion.Text;
+        TextText.text = ResolveTextSize(currentQuestion.Text, LineLength);
 
         currentWaiter = WaitForAnswer();
         StartCoroutine(currentWaiter);
@@ -107,7 +112,7 @@ public class MiniGame5Controller : MiniGameController
         Debug.Log("Waiting");
         yield return new WaitForSeconds(WaitDuration);
 
-        TextText.text = currentQuestion.ReactionIgnore;
+        TextText.text = ResolveTextSize(ReactionIgnore, LineLength);
         currentWaiter = null;
 
         StartCoroutine(Next());
@@ -115,34 +120,78 @@ public class MiniGame5Controller : MiniGameController
 
     void MouseIterate()
     {
-        if (currentWaiter != null)
+        int direction = mouseScrollInput.GetDirection();
+        Debug.Log(direction);
+
+        if (currentWaiter != null && direction != 0)
         {
             StopCoroutine(currentWaiter);
             currentWaiter = null;
 
-            bool right = mouseScrollInput.GetDirection() == currentQuestion.Answer;
-            Debug.Log(mouseScrollInput.GetDirection());
-
-            if (mouseScrollInput.GetDirection() == -1)
+            bool right = direction == currentQuestion.Answer;
+            if (direction == -1)
             {
                 player.ChangeAnimationState(Player.STATE_LAUGH);
-                
-                if (right)
-                    TextText.text = currentQuestion.ReactionRight;
-                else
-                    TextText.text = currentQuestion.ReactionWrong;
-            }
-            else if (mouseScrollInput.GetDirection() == 1)
-            {
-                player.ChangeAnimationState(Player.STATE_SAD);
+                AudioSource.PlayClipAtPoint(LaughClip, Vector3.zero);
 
                 if (right)
-                    TextText.text = currentQuestion.ReactionRight;
+                    TextText.text = ResolveTextSize(ReactionRight, LineLength);
                 else
-                    TextText.text = currentQuestion.ReactionWrong;
+                    TextText.text = ResolveTextSize(ReactionWrong, LineLength);
+            }
+            else if (direction == 1)
+            {
+                player.ChangeAnimationState(Player.STATE_SAD);
+                AudioSource.PlayClipAtPoint(SadClip, Vector3.zero);
+
+                if (right)
+                    TextText.text = ResolveTextSize(ReactionRight, LineLength);
+                else
+                    TextText.text = ResolveTextSize(ReactionWrong, LineLength);
             }
 
             StartCoroutine(Next());
         }
+    }
+
+    // Wrap text by line height
+    private string ResolveTextSize(string input, int lineLength)
+    {
+        // Split string by char " "    
+        string[] words = input.Split(" "[0]);
+
+        // Prepare result
+        string result = "";
+
+        // Temp line string
+        string line = "";
+
+        // for each all words     
+        foreach (string s in words)
+        {
+            // Append current word into line
+            string temp = line + " " + s;
+
+            // If line length is bigger than lineLength
+            if (temp.Length > lineLength)
+            {
+
+                // Append current line into result
+                result += line + "\n";
+                // Remain word append into new line
+                line = s;
+            }
+            // Append current word into current line
+            else
+            {
+                line = temp;
+            }
+        }
+
+        // Append last line into result   
+        result += line;
+
+        // Remove first " " char
+        return result.Substring(1, result.Length - 1);
     }
 }
