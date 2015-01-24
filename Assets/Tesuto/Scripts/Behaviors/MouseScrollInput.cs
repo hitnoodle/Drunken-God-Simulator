@@ -28,6 +28,24 @@ public class MouseScrollInput : MonoBehaviour
     private float _Falloff;
     private float _Input;
 
+	public static MouseScrollInput instance;
+	
+	public static MouseScrollInput Instance  
+	{     
+		get     
+		{       
+			if (instance ==  null)
+				instance = GameObject.FindObjectOfType(typeof(MouseScrollInput)) as  MouseScrollInput;      
+			return instance;    
+		}  
+	}
+
+	public float GetMouseWheelSpeed(){
+//		_Translation		*= _Input * 10f;
+		
+		return _Translation;
+	}
+
 	// Use this for initialization
 	void Start() 
 	{
@@ -78,7 +96,6 @@ public class MouseScrollInput : MonoBehaviour
 
             if (OnMouseScroll != null) OnMouseScroll(_Translation);
         }
-
         //Debug.Log(_Position + " " + _Translation);
 	}
 }
