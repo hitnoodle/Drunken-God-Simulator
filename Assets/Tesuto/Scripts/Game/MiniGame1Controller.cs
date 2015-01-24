@@ -3,28 +3,26 @@ using System.Collections;
 
 public class MiniGame1Controller : MiniGameController 
 {
+	private Player player;
+	
 	// Use this for initialization
 	void Start() 
 	{
-	
+		player		= GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		player.ChangeAnimationState(Player.STATE_KNOCK);
 	}
 
     public override void StartGame()
     {
         base.StartGame();
     }
-	
-	// Update is called once per frame
-	void Update() 
+
+	public void SceneEnd()
 	{
-        if (!Started) return;
+		if (!Started) return;
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (OnGameDone != null)
-                OnGameDone(0f);
+	    if (OnGameDone != null) OnGameDone(0f);
 
-            Destroy(gameObject);
-        }
+	    Destroy(gameObject);
 	}
 }
