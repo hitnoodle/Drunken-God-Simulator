@@ -1,28 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MiniGame1Controller : MiniGameController 
+public class MiniGame1Controller : MiniGameController
 {
-	private Player player;
-	
-	// Use this for initialization
-	void Start() 
-	{
-		player		= GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		player.ChangeAnimationState(Player.STATE_KNOCK);
-	}
+    public int KnockedTime;
+    public ObjectWithCollider Door;
+
+    private Player player;
 
     public override void StartGame()
     {
         base.StartGame();
+        Debug.Log("Mini Game 1 Started");
+
+        Door.onCollideWithPlayer += DoorKnocked;
+
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player.ChangeAnimationState(Player.STATE_KNOCK);
+        player.SetMouseScrollActive(true);
     }
 
-	public void SceneEnd()
-	{
-		if (!Started) return;
+    void DoorKnocked()
+    {
+        if (!Started) return;
 
-	    if (OnGameDone != null) OnGameDone(0f);
+        player.DeactivateAttackCollider();
+        KnockedTime--;
 
-	    Destroy(gameObject);
-	}
+        if (KnockedTime <= 0)
+            SceneEnd();
+    }
+
+    public void SceneEnd()
+    {
+        player.ChangeAnimationState(Player.STATE_IDLE);
+        player.SetMouseScrollActive(false);
+
+        if (OnGameDone != null)
+            OnGameDone(0f);
+
+        Destroy(gameObject);
+    }
 }

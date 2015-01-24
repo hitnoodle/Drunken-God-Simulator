@@ -18,8 +18,14 @@ public class MouseScrollInput : MonoBehaviour
     // Whether or not to use the scrollwheel acceleration
     public bool ScrollWheelAcceleration = true;
 
+    // Iteration
+    public float IterationTranslation = 0.3f;
+
     public delegate void _OnMouseScroll(float delta);
     public _OnMouseScroll OnMouseScroll;
+
+    public delegate void _OnMouseIterate();
+    public _OnMouseIterate OnMouseIterate;
 
     private float _Timer;
     private float _Translation;
@@ -28,23 +34,32 @@ public class MouseScrollInput : MonoBehaviour
     private float _Falloff;
     private float _Input;
 
-	public static MouseScrollInput instance;
-	
+    private float _InputBefore;
+    private int _Iteration;
+
+	private static MouseScrollInput _Instance;
 	public static MouseScrollInput Instance  
 	{     
 		get     
-		{       
-			if (instance ==  null)
-				instance = GameObject.FindObjectOfType(typeof(MouseScrollInput)) as  MouseScrollInput;      
-			return instance;    
+		{
+            if (_Instance == null)
+                _Instance = GameObject.FindObjectOfType(typeof(MouseScrollInput)) as MouseScrollInput;
+
+            return _Instance;    
 		}  
 	}
 
-	public float GetMouseWheelSpeed(){
-//		_Translation		*= _Input * 10f;
-		
-		return _Translation;
-	}
+    public int GetDirection()
+    {
+        int input = 0;
+
+        if (_Input < 0)
+            input = -1;
+        else if (_Input > 0)
+            input = 1;
+
+        return input;
+    }
 
 	// Use this for initialization
 	void Start() 
@@ -97,5 +112,11 @@ public class MouseScrollInput : MonoBehaviour
             if (OnMouseScroll != null) OnMouseScroll(_Translation);
         }
         //Debug.Log(_Position + " " + _Translation);
+
+        if (Mathf.Abs(_Translation) >= IterationTranslation)
+        {
+            if (OnMouseIterate != null)
+                OnMouseIterate();
+        }
 	}
 }

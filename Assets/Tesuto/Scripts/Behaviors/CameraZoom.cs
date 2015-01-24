@@ -56,7 +56,7 @@ public class CameraZoom : MonoBehaviour
             _CameraTransform.localPosition = new Vector3(lerpX, lerpY, lerpZ);
             _CameraTransform.rotation = Quaternion.Slerp(_CameraTransform.rotation, targetRotation, Time.deltaTime * _CameraSmoothing);
 
-            bool doneMoving = Vector3.Distance(_CameraTransform.localPosition, _TargetPosition) < 0.001f;
+            bool doneMoving = Vector3.Distance(_CameraTransform.localPosition, _TargetPosition) < 0.01f;
             //bool doneRotating = Vector3.Distance(_CameraTransform.rotation.eulerAngles, _TargetRotation) < 0.001f;
 
             if (doneMoving)
