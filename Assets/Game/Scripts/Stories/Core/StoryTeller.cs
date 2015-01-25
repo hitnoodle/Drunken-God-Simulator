@@ -42,7 +42,7 @@ namespace RPG.Stories
 		void Awake()
 		{
 			_Instance = this;
-            DontDestroyOnLoad(gameObject);
+//            DontDestroyOnLoad(gameObject);
 		}
 
 		// Use this for initialization
@@ -186,6 +186,14 @@ namespace RPG.Stories
 
 			if (OnEnd != null)
 				OnEnd();
+		}
+
+		public static void DestroyStory()
+		{
+			if (_Instance == null) return;
+			
+			Destroy(_Instance.gameObject);
+			_Instance = null;
 		}
 	}
 }

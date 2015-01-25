@@ -12,6 +12,9 @@ public class ParallaxBG : MonoBehaviour
     public float LeftX;
     public float RightX;
 
+    public delegate void _OnBackgroundSwap();
+    public _OnBackgroundSwap OnBackgroundSwap;
+
     private List<Transform> BackgroundTransforms;
 
 	// Use this for initialization
@@ -28,7 +31,11 @@ public class ParallaxBG : MonoBehaviour
         foreach (Transform t in BackgroundTransforms)
         {
             t.Translate(Speed * Time.deltaTime * Factor, 0, 0);
-            if (t.position.x <= LeftX) t.position = new Vector3(RightX, t.position.y, t.position.z);
+            if (t.position.x <= LeftX)
+            {
+                t.position = new Vector3(RightX, t.position.y, t.position.z);
+                if (OnBackgroundSwap != null) OnBackgroundSwap();
+            }
         }
 	}
 }

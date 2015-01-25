@@ -7,7 +7,6 @@ public class MiniGame7Controller : MiniGameController
     public int HowManyEnemies = 5;
     public GameObject EnemyPrefab;
 
-    private Player player;
     private MouseScrollInput mouseScrollInput;
 
     private int ParryDirection;
@@ -16,8 +15,7 @@ public class MiniGame7Controller : MiniGameController
     {
         base.StartGame();
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        player.ChangeAnimationState(Player.STATE_PARRY_IDLE);
+        Player.ChangeAnimationState(Player.STATE_PARRY_IDLE);
 
         mouseScrollInput = MouseScrollInput.Instance;
         mouseScrollInput.OnMouseIterate += MouseIterate;
@@ -36,7 +34,7 @@ public class MiniGame7Controller : MiniGameController
             yield return new WaitForSeconds(0.1f);
 
             int type = Random.Range(0, 2);
-            enemy.Attack(type);
+            enemy.Attack(Player, type);
 
             yield return new WaitForSeconds(SpawnRate);
         }
@@ -48,23 +46,24 @@ public class MiniGame7Controller : MiniGameController
     {
         mouseScrollInput.OnMouseIterate -= MouseIterate;
 
-        player.ChangeAnimationState(Player.STATE_IDLE);
+        Player.ChangeAnimationState(Player.STATE_IDLE);
 
         if (OnGameDone != null)
             OnGameDone(0f);
 
-        Destroy(gameObject);
+        Started = false;
+        //Destroy(gameObject);
     }
 
     void MouseIterate()
     {
         if (mouseScrollInput.GetDirection() == -1)
         {
-            player.ChangeAnimationState(Player.STATE_ATTACK_DOWN);
+            Player.ChangeAnimationState(Player.STATE_ATTACK_DOWN);
         }
         else if (mouseScrollInput.GetDirection() == 1)
         {
-            player.ChangeAnimationState(Player.STATE_ATTACK_UP);
+            Player.ChangeAnimationState(Player.STATE_ATTACK_UP);
         }
     }
 }

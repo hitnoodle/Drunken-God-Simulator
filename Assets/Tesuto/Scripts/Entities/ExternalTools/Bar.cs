@@ -11,8 +11,11 @@ public class Bar : MonoBehaviour {
 	private float defaultScaleY;
 
 	private SpriteRenderer _Sprite;
+
+    private bool _Initialized = false;
+
 	// Use this for initialization
-	void Start () {
+	public void Initialize () {
 		_Transform			= transform;
 		_Scale				= _Transform.localScale;
 
@@ -22,9 +25,13 @@ public class Bar : MonoBehaviour {
 		_Sprite				= GetComponent<SpriteRenderer>();
 
 		defaultScaleY		= _Scale.y;
+
+        _Initialized = true;
 	}
 	
 	void Update(){
+        if (!_Initialized) return;
+
 		_Scale				= _Transform.localScale;
 
 		_Scale.y			= (parameter.AWARENESS/maximumParameter)*defaultScaleY;
@@ -33,6 +40,8 @@ public class Bar : MonoBehaviour {
 	}
 
 	public void SetColor(Color color){
+        if (!_Initialized) return;
+
 		_Sprite.color		= color;
 	}
 }

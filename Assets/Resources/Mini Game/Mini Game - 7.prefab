@@ -131,6 +131,7 @@ MonoBehaviour:
   MinSpeed: 8
   MaxSpeed: 10
   AttackDelta: 3.5
+  DeathDelta: 1.5
   StateSpeed:
   - 3
   - 3

@@ -3,55 +3,52 @@ using System.Collections;
 
 public class MiniGame2Controller : MiniGameController 
 {
-	public string STATE_TREE_GROW;
-
 	public ObjectWithAnimation TheTree;
-	public float MaximumGrow;
-
-	public float paramGrow;
-
     public bool IsSoundPlaying = false;
-    public AudioClip TreeClip;
 
-	private Player player;
 	private MouseScrollInput mouseScrollInput;
 
     public override void StartGame()
     {
         base.StartGame();
+
         Debug.Log("Mini Game 2 Started");
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         mouseScrollInput = GameObject.FindGameObjectWithTag("Manager").GetComponent<MouseScrollInput>();
         mouseScrollInput.OnMouseScroll += OnMouseScroll;
 
+		Player.ChangeAnimationState(Player.STATE_TREE);
+
         TheTree.SetAnimationSpeed(0f);
+        TheTree.finishState += SceneEnd;
     }
 
 	void OnMouseScroll(float delta)
     {
-        if (!IsSoundPlaying)
-        {
-            AudioSource.PlayClipAtPoint(TreeClip, Vector3.zero);
-            IsSoundPlaying = true;
-        }
-
-		TheTree.SetAnimationSpeed(delta);
-        
-		if(paramGrow <= MaximumGrow)
-			paramGrow += delta;
-		else
-			SceneEnd();
+		if(delta < 0f){
+			if (!IsSoundPlaying)
+			{
+				SoundManager.PlaySoundEffectOneShot("magic hand of nabi");
+				IsSoundPlaying = true;
+			}
+			TheTree.SetAnimationSpeed(-1 * delta);
+		}
+			
 	}
 
 	public void SceneEnd()
 	{
 		mouseScrollInput.OnMouseScroll -= OnMouseScroll;
-		player.ChangeAnimationState(Player.STATE_IDLE);
+
+        SoundManager.StopSoundEffect("magic hand of nabi");
+
+        TheTree.SetAnimationSpeed(0);
+        Player.ChangeAnimationState(Player.STATE_IDLE);
 		
 		if (OnGameDone != null)
 			OnGameDone(0f);
-		
-		Destroy(gameObject);
+
+        Started = false;
+		//Destroy(gameObject);
 	}
 }

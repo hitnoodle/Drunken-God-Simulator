@@ -2,8 +2,12 @@
 using System.Collections;
 
 public class ObjectWithAnimation : MonoBehaviour {
-	private Animator _anim;
-	
+
+    public delegate void EndState();
+    public event EndState finishState;
+
+    private Animator _anim;
+
 	// Use this for initialization
 	void Start () {
 		Initialize();
@@ -26,4 +30,10 @@ public class ObjectWithAnimation : MonoBehaviour {
 	public void ChangeAnimationState(string state){
 		_anim.SetTrigger(state);
 	}
+
+    public void ReachLimitGrow()
+    {
+        if (finishState != null)
+            finishState();
+    }
 }

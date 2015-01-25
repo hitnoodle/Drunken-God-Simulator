@@ -4,6 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour 
 {
     public MouseScrollInput MouseScrollInput;
+
     public float[] StateSpeed;
 
     private Animator _anim;
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
 	public const int STATE_RUN		    = 9;
 	public const int STATE_SAD		    = 10;
     public const int STATE_PARRY_IDLE   = 11;
+    public const int STATE_TREE         = 12;
 	
 	// Use this for initialization
 	void Start () {

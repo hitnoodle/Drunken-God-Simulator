@@ -22,7 +22,6 @@ public class ParryEnemy : MonoBehaviour
 	// Use this for initialization
 	void Start() 
 	{
-        _Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         _Animator = GetComponent<Animator>();
 	}
 
@@ -33,8 +32,12 @@ public class ParryEnemy : MonoBehaviour
     }
 
     // 1 is up, 2 is down
-    public void Attack(int direction)
+    public void Attack(Player player, int direction)
     {
+        GetComponent<SpriteRenderer>().enabled = true;
+
+        _Player = player;
+
         ChangeAnimationState(direction);
 
         AttackRoutine = Attaack();
@@ -82,6 +85,7 @@ public class ParryEnemy : MonoBehaviour
             if (playerState == Player.STATE_ATTACK_UP && enemyState == STATE_ATTACK_UP)
             {
                 StartCoroutine(Out());
+
             }
             else if (playerState == Player.STATE_ATTACK_DOWN && enemyState == STATE_ATTACK_DOWN)
             {
@@ -99,6 +103,8 @@ public class ParryEnemy : MonoBehaviour
     {
         float speedX = Random.Range(10, 15);
         float speedY = Random.Range(-15, 15);
+
+		SoundManager.PlaySoundEffect("sword baru");
 
         while (transform.position.x <= 13)
         {
@@ -122,6 +128,8 @@ public class ParryEnemy : MonoBehaviour
 
             yield return null;
         }
+
+		SoundManager.PlaySoundEffect("sword slice baru");
 
         Destroy(gameObject);
     }

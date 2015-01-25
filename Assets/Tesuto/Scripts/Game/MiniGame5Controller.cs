@@ -32,7 +32,6 @@ public class MiniGame5Controller : MiniGameController
     public AudioClip LaughClip;
     public AudioClip SadClip;
 
-    private Player player;
     private MouseScrollInput mouseScrollInput;
 
     private int currentVillager = 0;
@@ -44,14 +43,14 @@ public class MiniGame5Controller : MiniGameController
         base.StartGame();
         Debug.Log("Mini Game 5 Started");
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        player.ChangeAnimationState(Player.STATE_IDLE);
+        Player.ChangeAnimationState(Player.STATE_IDLE);
 
         mouseScrollInput = MouseScrollInput.Instance;
         mouseScrollInput.OnMouseIterate += MouseIterate;
 
         TextName = GameObject.Find("Text Name").GetComponent<TextMesh>();
         TextText = GameObject.Find("Text Story").GetComponent<TextMesh>();
+
 
         StartCoroutine(StartVillager());
     }
@@ -90,17 +89,22 @@ public class MiniGame5Controller : MiniGameController
             }
 
             villagerTransform.position = new Vector3(EndX, villagerTransform.position.y, villagerTransform.position.z);
+            villagerTransform.gameObject.SetActive(false);
 
             if (currentVillager == Questions.Length)
             {
                 yield return new WaitForSeconds(1f);
 
-                player.ChangeAnimationState(Player.STATE_IDLE);
+                Player.ChangeAnimationState(Player.STATE_IDLE);
 
                 if (OnGameDone != null)
                     OnGameDone(0f);
 
-                Destroy(gameObject);
+				
+				SoundManager.PlayBackgroundMusic("tension of the end",true);
+
+                Started = false;
+                //Destroy(gameObject);
             }
             else
                 StartCoroutine(StartVillager());
@@ -121,7 +125,7 @@ public class MiniGame5Controller : MiniGameController
     void MouseIterate()
     {
         int direction = mouseScrollInput.GetDirection();
-        Debug.Log(direction);
+        //Debug.Log(direction);
 
         if (currentWaiter != null && direction != 0)
         {
@@ -131,8 +135,8 @@ public class MiniGame5Controller : MiniGameController
             bool right = direction == currentQuestion.Answer;
             if (direction == -1)
             {
-                player.ChangeAnimationState(Player.STATE_LAUGH);
-                AudioSource.PlayClipAtPoint(LaughClip, Vector3.zero);
+                Player.ChangeAnimationState(Player.STATE_LAUGH);
+				SoundManager.PlaySoundEffectOneShot("laugh baru");
 
                 if (right)
                     TextText.text = ResolveTextSize(ReactionRight, LineLength);
@@ -141,8 +145,9 @@ public class MiniGame5Controller : MiniGameController
             }
             else if (direction == 1)
             {
-                player.ChangeAnimationState(Player.STATE_SAD);
-                AudioSource.PlayClipAtPoint(SadClip, Vector3.zero);
+                Player.ChangeAnimationState(Player.STATE_SAD);
+//                AudioSource.PlayClipAtPoint(SadClip, Vector3.zero);
+				SoundManager.PlaySoundEffectOneShot("cry baru");
 
                 if (right)
                     TextText.text = ResolveTextSize(ReactionRight, LineLength);

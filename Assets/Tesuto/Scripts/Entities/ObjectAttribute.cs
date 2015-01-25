@@ -10,7 +10,7 @@ public class ObjectAttribute : MonoBehaviour {
 	}
 
 	public void SetEvent(int param){
-		_anim.SetInteger("event",0);
+		_anim.SetInteger("event",param);
 	}
 
 }

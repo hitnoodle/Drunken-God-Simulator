@@ -263,4 +263,10 @@ public class StoryUI : MonoBehaviour
         TextName.gameObject.SetActive(false);
         TextStory.gameObject.SetActive(false);
     }
+
+	void OnDestroy()
+	{
+		StoryTeller.OnStart -= Show;
+		StoryTeller.OnTextEvent -= ShowCurrentText;
+	}    
 }

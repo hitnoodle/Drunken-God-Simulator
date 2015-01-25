@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MiniGame3Controller : MiniGameController {
 	public int NumberOfPulled			= 3;
-	private Player player;
+
 	private MouseScrollInput mouseScrollInput;
 
 	private ObjectWithAnimation[] TheCreatures;
@@ -24,15 +24,21 @@ public class MiniGame3Controller : MiniGameController {
 
 	public bool CanMinusThePoint				= true;
 	// Use this for initialization
-	void Start () {
-		player								= GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		player.ChangeAnimationState(Player.STATE_PULLPUSH);
+	
+    public override void StartGame() {
+        base.StartGame();
+
+		Player.ChangeAnimationState(Player.STATE_PULLPUSH);
+
 		mouseScrollInput					= GameObject.FindGameObjectWithTag("Manager").GetComponent<MouseScrollInput>();
 		mouseScrollInput.OnMouseScroll		+= OnMouseScroll;
 
 		TheCreatures						= this.GetComponentsInChildren<ObjectWithAnimation>();
 
 		DefaultMonsterAwareness				= monsterAttribute.AWARENESS;
+
+        _bar.Initialize();
+        Rope.Initialize();
 	}
 
 	void OnMouseScroll(float delta){
@@ -45,43 +51,57 @@ public class MiniGame3Controller : MiniGameController {
 		}
 	}
 
-	void Update(){
-		if(BarIsIncreased)
-			monsterAttribute.AWARENESS += awarenessModifier * Time.deltaTime;
-		else
-			monsterAttribute.AWARENESS -= awarenessModifier * Time.deltaTime;
+    void Update()
+    {
+        if (!Started) return;
 
-		if(monsterAttribute.AWARENESS <= 0 || monsterAttribute.AWARENESS >= DefaultMonsterAwareness)
-			BarIsIncreased		= !BarIsIncreased;
+        if (BarIsIncreased)
+            monsterAttribute.AWARENESS += awarenessModifier * Time.deltaTime;
+        else
+            monsterAttribute.AWARENESS -= awarenessModifier * Time.deltaTime;
 
-		if(monsterAttribute.AWARENESS >= (0.5f * DefaultMonsterAwareness)){
-			MonsterCanBePulled		= true;
-			CanMinusThePoint		= true;
-			_bar.SetColor(colorAwareDown);
+        if (monsterAttribute.AWARENESS <= 0 || monsterAttribute.AWARENESS >= DefaultMonsterAwareness)
+            BarIsIncreased = !BarIsIncreased;
 
-			monsterAttribute.SetEvent(0);
-		}
-		else{
-			monsterAttribute.SetEvent(1);
-			MonsterCanBePulled		= false;
-			_bar.SetColor(colorAwarUp);
-			if(CanMinusThePoint){
-				CanMinusThePoint		= false;
-				NumberOfPulled--;
-				if(NumberOfPulled <= 0)
-					SceneEnd();
-			}
-		}
-	}
+        if (monsterAttribute.AWARENESS >= (0.5f * DefaultMonsterAwareness))
+        {
+            if (NumberOfPulled <= 0)
+            {
+                SceneEnd();
+            }
+
+            MonsterCanBePulled = true;
+            CanMinusThePoint = true;
+            _bar.SetColor(colorAwareDown);
+
+            monsterAttribute.SetEvent(0);
+
+        }
+        else
+        {
+            monsterAttribute.SetEvent(1);
+            MonsterCanBePulled = false;
+            _bar.SetColor(colorAwarUp);
+            if (CanMinusThePoint)
+            {
+                CanMinusThePoint = false;
+                NumberOfPulled--;
+				SoundManager.PlaySoundEffectOneShot("meong baru");
+            }
+        }
+    }
 
 	public void SceneEnd()
 	{
 		mouseScrollInput.OnMouseScroll		-= OnMouseScroll;
-		player.ChangeAnimationState(Player.STATE_IDLE);
+
+        _bar.GetComponent<SpriteRenderer>().enabled = false;
+        Player.ChangeAnimationState(Player.STATE_IDLE);
 		
 		if (OnGameDone != null)
 			OnGameDone(0f);
-		
-		Destroy(gameObject);
+
+        Started = false;
+		//Destroy(gameObject);
 	}
 }
